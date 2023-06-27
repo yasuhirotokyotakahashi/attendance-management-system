@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\RestController;
+use App\Http\Controllers\TimeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +16,24 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+Route::middleware('auth')->group(function () {
+    Route::get('/', [AuthController::class, 'index']);
 });
+
+
+Route::get('/time', [TimeController::class, 'index']);
+
+Route::get('/time2', [TimeController::class, 'mypage']);
+
+Route::get('/timein', [TimeController::class, 'timein']);
+Route::post('/timein', [TimeController::class, 'timein']);
+Route::get('/timeout', [TimeController::class, 'timeout']);
+Route::post('/timeout', [TimeController::class, 'timeout']);
+
+Route::get('/breakin', [RestController::class, 'breakin']);
+Route::post('/breakin', [RestController::class, 'breakin']);
+Route::post('/breakout', [RestController::class, 'breakout']);
