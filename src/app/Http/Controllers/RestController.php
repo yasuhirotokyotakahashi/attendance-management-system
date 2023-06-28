@@ -17,9 +17,9 @@ class RestController extends Controller
         $user = Auth::user();
         $time = Time::where('user_id', $user->id)->latest()->first();
         $oldbreakin = Rest::where('time_id', $time->id)->latest()->first();
-        if ($time->punchIn && !$time->punchOut && !$oldbreakin->breakIn) {
+        if ($time->punchIn && !$time->punchOut) {
             $oldbreakin = Rest::create([
-                'time_id' => $oldbreakin->time_id,
+                'time_id' => $time->id,
                 'breakIn' => Carbon::now(),
             ]);
             return redirect()->back();
@@ -32,9 +32,13 @@ class RestController extends Controller
         $user = Auth::user();
         $time = Time::where('user_id', $user->id)->latest()->first();
         $oldbreakin = Rest::where('time_id', $time->id)->latest()->first();
+        $breakIn = new Carbon($oldbreakin->breakIn);
+        $breakOut = new Carbon($oldbreakin->breakOut);
+        $rest_time = $breakIn->diffInMinutes($breakOut);
         if ($oldbreakin->breakIn && !$oldbreakin->breakOut) {
             $oldbreakin->update([
                 'breakOut' => Carbon::now(),
+                'rest_time' => $rest_time,
             ]);
             return redirect()->back();
         }

@@ -21,11 +21,14 @@
                     <th class="attendance-table__header">勤務時間</th>
                 </tr>
                 <tr class="attendance-table__row">
-                    <th class="attendance-table__item">name</th>
-                    <th class="attendance-table__item">kinmukaisi</th>
-                    <th class="attendance-table__item">kinmusyuuryou</th>
-                    <th class="attendance-table__item">kyuukei</th>
-                    <th class="attendance-table__item">kinmujikan</th>
+                    @foreach ($items as $item)
+                        <th class="attendance-table__item">{{ $item->user->name }}</th>
+                        <th class="attendance-table__item">kinmukaisi{{ $item->punchIn }}</th>
+                        <th class="attendance-table__item">kinmusyuuryou{{ $item->punchOut }}</th>
+                        <th class="attendance-table__item">kyuukei{{ $item->breakIn }}</th>
+                        <th class="attendance-table__item">kinmujikan{{ $item->breakOut }}</th>
+                    @endforeach
+
                 </tr>
             </table>
         </div>

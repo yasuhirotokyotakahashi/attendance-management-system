@@ -21,6 +21,7 @@ class TimeController extends Controller
         $user = Auth::user();
 
         $oldtimein = Time::where('user_id', $user->id)->latest()->first(); //一番最初のレコードを取得
+        dd($oldtimein);
 
         $oldDay = '';
         if ($oldtimein) {
@@ -85,5 +86,12 @@ class TimeController extends Controller
                 }
             }
         }
+    }
+
+    public function performance()
+    {
+        $user = Auth::user();
+        $items = Time::where('user_id', $user->id)->with('user')->get();
+        return view('daily', compact('items'));
     }
 }
