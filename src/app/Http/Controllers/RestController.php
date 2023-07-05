@@ -17,13 +17,19 @@ class RestController extends Controller
         $user = Auth::user();
         $time = Time::where('user_id', $user->id)->latest()->first();
         $oldbreakin = Rest::where('time_id', $time->id)->latest()->first();
-        if ($time->punchIn && !$time->punchOut) {
-            $oldbreakin = Rest::create([
-                'time_id' => $time->id,
-                'breakIn' => Carbon::now(),
-            ]);
-            return redirect()->back();
-        }
+        if ($oldbreakin)
+            if ($time->punchIn && !$time->punchOut) {
+                $oldbreakin = Rest::create([
+                    'time_id' => $time->id,
+                    'breakIn' => Carbon::now(),
+                ]);
+                return redirect()->back();
+            }
+        $oldbreakin = Rest::create([
+            'time_id' => $time->id,
+            'breakIn' => Carbon::now(),
+        ]);
+
         return redirect()->back();
     }
 
@@ -43,5 +49,24 @@ class RestController extends Controller
             return redirect()->back();
         }
         return redirect()->back();
+    }
+
+    public function performance()
+    {
+        // $items = Rest::with('time.user')->paginate(5);
+
+        $items = Rest::with('time')->with('time.user')->get();
+
+
+        $items = $items->sortBy('time.date')->values();
+
+
+
+
+
+
+
+
+        return view('daily', compact('items'));
     }
 }

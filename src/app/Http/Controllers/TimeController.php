@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Time;
 use App\Models\User;
+use App\Models\Rest;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,7 +22,6 @@ class TimeController extends Controller
         $user = Auth::user();
 
         $oldtimein = Time::where('user_id', $user->id)->latest()->first(); //一番最初のレコードを取得
-        dd($oldtimein);
 
         $oldDay = '';
         if ($oldtimein) {
@@ -90,8 +90,47 @@ class TimeController extends Controller
 
     public function performance()
     {
-        $user = Auth::user();
-        $items = Time::where('user_id', $user->id)->with('user')->get();
+
+
+        $items = Time::with('rest')->with('user')->orderBy('date')->Paginate(5);
+        dd($items);
+        // foreach ($items as $item)
+        //     $breakStart = new Carbon($item->rest->breakIn);
+        // $breakEnd = new Carbon($item->rest->breakOut);
+        // $breakTime = $breakStart->diffInSeconds($breakEnd);
+        // $workStart = new Carbon($item->punchIn);
+        // $workEnd = new Carbon($item->punchOut);
+        // $workTime = $workStart->diffInSeconds($workEnd);
+
+
+
+
+
+
+
+        // $hours = floor($diffInSeconds / 3600);
+        // $minutes = floor(($diffInSeconds % 3600) / 60);
+        // $seconds = $diffInSeconds % 60;
+        // dd($hours . '時間', $minutes . '分', $seconds . '秒');
+
+
+
+
+
+
+
+
+        return view('daily', compact('items', 'breakTime', 'workTime'));
+    }
+
+
+
+    public function result(Request $request)
+    {
+
+        $items = Time::with('rest')->with('user')->whereDate('date', $request->date)->Paginate(5);
+
+
         return view('daily', compact('items'));
     }
 }

@@ -16,5 +16,8 @@ class Rest extends Model
         return $this->belongsTo(Time::class);
     }
 
-    
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

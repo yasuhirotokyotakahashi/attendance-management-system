@@ -16,8 +16,8 @@ class Time extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function rests()
+    public function rest()
     {
-        return $this->hasMany(Rest::class);
+        return $this->hasOne(Rest::class);
     }
 }

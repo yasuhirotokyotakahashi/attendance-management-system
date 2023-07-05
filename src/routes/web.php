@@ -28,6 +28,7 @@ Route::middleware('auth')->group(function () {
 Route::get('/time', [TimeController::class, 'index']);
 
 Route::get('/performance', [TimeController::class, 'performance']);
+Route::post('/performance', [TimeController::class, 'result']);
 
 Route::get('/timein', [TimeController::class, 'timein']);
 Route::post('/timein', [TimeController::class, 'timein']);

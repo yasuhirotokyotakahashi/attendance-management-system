@@ -42,14 +42,14 @@
 
 .attendance__content {
     margin: 0 auto;
-    padding: 30px 15px;
-    max-width: 1230px;
+    padding: 15px 15px;
+    max-width: 1400px;
     background: #d3d3d3;
 }
 
 .attendance-table {
     margin: 30px auto;
-    width: 70%;
+    width: 80%;
     text-align: center;
 }
 
@@ -63,13 +63,13 @@
 
 .attendance-table__header {
     padding: 12px;
-    width: 20%;
+    width: 12%;
     font-weight: bold;
 }
 
 .attendance-table__item {
     padding: 12px;
-    width: 20%;
+    width: 12%;
 }
 
 .greeting {
