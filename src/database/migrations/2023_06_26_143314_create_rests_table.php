@@ -18,7 +18,6 @@ class CreateRestsTable extends Migration
             $table->foreignId('time_id')->constrained()->cascadeOnDelete();
             $table->time('breakIn')->nullable();
             $table->time('breakOut')->nullable();
-            $table->time('rest_time')->nullable();
             $table->timestamps();
         });
     }

@@ -17,20 +17,21 @@ class RestController extends Controller
         $user = Auth::user();
         $time = Time::where('user_id', $user->id)->latest()->first();
         $oldbreakin = Rest::where('time_id', $time->id)->latest()->first();
-        if ($oldbreakin)
-            if ($time->punchIn && !$time->punchOut) {
-                $oldbreakin = Rest::create([
-                    'time_id' => $time->id,
-                    'breakIn' => Carbon::now(),
-                ]);
-                return redirect()->back();
-            }
-        $oldbreakin = Rest::create([
-            'time_id' => $time->id,
-            'breakIn' => Carbon::now(),
-        ]);
 
-        return redirect()->back();
+        if ($time->punchIn && !$time->punchOut) {
+            if ($oldbreakin && !$oldbreakin->breakOut) {
+                return redirect()->back()->with('message', '休憩中です')->content('');
+            }
+            $oldbreakin = Rest::create([
+                'time_id' => $time->id,
+                'breakIn' => Carbon::now(),
+            ]);
+            return redirect()->back()->with('message', 'ゆっくり休んでください')->content('');
+        };
+
+        if ($oldbreakin && !$oldbreakin->breakOut) {
+            return redirect()->back()->with('message', '休憩中です')->content('');
+        }
     }
 
     public function breakout()
@@ -38,35 +39,12 @@ class RestController extends Controller
         $user = Auth::user();
         $time = Time::where('user_id', $user->id)->latest()->first();
         $oldbreakin = Rest::where('time_id', $time->id)->latest()->first();
-        $breakIn = new Carbon($oldbreakin->breakIn);
-        $breakOut = new Carbon($oldbreakin->breakOut);
-        $rest_time = $breakIn->diffInMinutes($breakOut);
-        if ($oldbreakin->breakIn && !$oldbreakin->breakOut) {
+        if ($oldbreakin && !$oldbreakin->breakOut) {
             $oldbreakin->update([
                 'breakOut' => Carbon::now(),
-                'rest_time' => $rest_time,
             ]);
-            return redirect()->back();
+            return redirect()->back()->with('message', '頑張ってください')->content('');;
         }
         return redirect()->back();
-    }
-
-    public function performance()
-    {
-        // $items = Rest::with('time.user')->paginate(5);
-
-        $items = Rest::with('time')->with('time.user')->get();
-
-
-        $items = $items->sortBy('time.date')->values();
-
-
-
-
-
-
-
-
-        return view('daily', compact('items'));
     }
 }

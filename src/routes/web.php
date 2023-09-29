@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RestController;
 use App\Http\Controllers\TimeController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,9 +25,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/', [AuthController::class, 'index']);
 });
 
-
-Route::get('/time', [TimeController::class, 'index']);
-
 Route::get('/performance', [TimeController::class, 'performance']);
 Route::post('/performance', [TimeController::class, 'result']);
 
@@ -38,3 +36,5 @@ Route::post('/timeout', [TimeController::class, 'timeout']);
 Route::get('/breakin', [RestController::class, 'breakin']);
 Route::post('/breakin', [RestController::class, 'breakin']);
 Route::post('/breakout', [RestController::class, 'breakout']);
+Route::get('/user', [UserController::class, 'index']);
+Route::get('/user/{id}/attendance', [UserController::class, 'showAttendance'])->name('user.attendance');

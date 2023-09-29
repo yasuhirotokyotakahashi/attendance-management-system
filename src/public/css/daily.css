@@ -35,7 +35,8 @@
     height: 200px;
     border-radius: 3px;
     background: #fff;
-    color: #000;
+    color: blue;
+    /* ボタンの文字色を青に変更 */
     cursor: pointer;
     margin: 30px auto;
 }
@@ -44,7 +45,8 @@
     margin: 0 auto;
     padding: 15px 15px;
     max-width: 1400px;
-    background: #d3d3d3;
+    background: #ebebeb;
+    /* 薄いグレーの背景色 */
 }
 
 .attendance-table {
@@ -58,7 +60,8 @@
 }
 
 .attendance-table__row {
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #000;
+    /* 黒い線で罫線を引く */
 }
 
 .attendance-table__header {
@@ -76,8 +79,6 @@
     text-align: center;
 }
 
-
-
 .attendance__content .date-navigation {
     display: flex;
     align-items: center;
@@ -88,8 +89,13 @@
 .date-navigation .next-date {
     font-size: 24px;
     text-decoration: none;
-    color: #000;
+    color: blue;
+    /* ボタンの文字色を青に変更 */
     margin: 0 10px;
+    border: 1px solid #000;
+    padding: 5px 10px;
+    background-color: #fff;
+    /* ボタンの背景色を白に変更 */
 }
 
 .attendance__content .date-navigation .prev-date,

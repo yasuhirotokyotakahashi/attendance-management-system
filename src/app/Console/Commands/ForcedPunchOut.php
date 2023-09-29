@@ -43,24 +43,30 @@ class ForcedPunchOut extends Command
     {
         $user = Auth::user();
         $timeOut = Time::where('user_id', $user->id)->latest()->first();
-        if (!$timeOut) {
-            $timeOut->update(['punchOut' => Carbon::now(),]);
 
+        if (!$timeOut) {
             $time = Time::create([
                 'user_id' => $user->id,
-                'PunchIn' => Carbon::now(),
+                'punchIn' => Carbon::now(),
             ]);
+
+            return;
         }
 
         if (empty($timeOut->punchOut) && $timeOut->beakIn) {
-            $restOut = Rest::where('time_id', $time->id)->latest()->first();
+            $restOut = Rest::where('time_id', $timeOut->id)->latest()->first();
+
             $timeOut->update([
                 'punchOut' => Carbon::now(),
             ]);
-            $restOut->update(['breakOut' => Carbon::now(),]);
+
+            $restOut->update([
+                'breakOut' => Carbon::now(),
+            ]);
+
             $time = Time::create([
                 'user_id' => $user->id,
-                'PunchIn' => Carbon::now(),
+                'punchIn' => Carbon::now(),
             ]);
         }
     }
