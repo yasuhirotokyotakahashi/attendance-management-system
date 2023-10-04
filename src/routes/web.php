@@ -25,16 +25,21 @@ Route::middleware('auth')->group(function () {
     Route::get('/', [AuthController::class, 'index']);
 });
 
-Route::get('/performance', [TimeController::class, 'performance']);
-Route::post('/performance', [TimeController::class, 'result']);
+Route::get('/attendance', [TimeController::class, 'performance']);
+Route::post('/attendance', [TimeController::class, 'result']);
 
 Route::get('/timein', [TimeController::class, 'timein']);
 Route::post('/timein', [TimeController::class, 'timein']);
+
 Route::get('/timeout', [TimeController::class, 'timeout']);
 Route::post('/timeout', [TimeController::class, 'timeout']);
 
 Route::get('/breakin', [RestController::class, 'breakin']);
 Route::post('/breakin', [RestController::class, 'breakin']);
+
 Route::post('/breakout', [RestController::class, 'breakout']);
+
 Route::get('/user', [UserController::class, 'index']);
-Route::get('/user/{id}/attendance', [UserController::class, 'showAttendance'])->name('user.attendance');
+
+Route::get('/user/{id}/attendance', [UserController::class, 'showAttendance'])
+    ->name('user.attendance');

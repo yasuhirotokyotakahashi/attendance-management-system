@@ -11,7 +11,7 @@
     </div>
 
     <div class="attendance__content">
-        <h1 class="greeting">{{ Auth::user()->name }} さんこんちゃ</h1>
+        <h1 class="greeting">{{ Auth::user()->name }} さんお疲れ様です。</h1>
         <div class="attendance__panel">
             <form class="attendance__button" action="/timein" method="post">
                 @csrf

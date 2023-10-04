@@ -12,9 +12,9 @@
     <div class="attendance__content">
 
         <div class="date-navigation">
-            <a href="/performance?date={{ $previousDate->format('Y-m-d') }}" class="prev-date">&lt;</a>
+            <a href="/attendance?date={{ $previousDate->format('Y-m-d') }}" class="prev-date">&lt;</a>
             <h1 class="date">{{ $selectedDate->format('Y年m月d日') }}</h1>
-            <a href="/performance?date={{ $nextDate->format('Y-m-d') }}" class="next-date">&gt;</a>
+            <a href="/attendance?date={{ $nextDate->format('Y-m-d') }}" class="next-date">&gt;</a>
         </div>
         <div class="">
             <table class="attendance-table__inner">

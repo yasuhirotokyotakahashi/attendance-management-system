@@ -41,33 +41,49 @@ class ForcedPunchOut extends Command
      */
     public function handle()
     {
-        $user = Auth::user();
-        $timeOut = Time::where('user_id', $user->id)->latest()->first();
+        // 現在の日時を取得
+        $now = Carbon::now();
 
-        if (!$timeOut) {
-            $time = Time::create([
-                'user_id' => $user->id,
-                'punchIn' => Carbon::now(),
+        // 現在の日付を取得
+        $currentDate = $now->toDateString();
+
+        // 今日の午後11時59分の時刻を設定
+        $closingTime = $now->copy()->setHour(23)->setMinute(59)->setSecond(59);
+
+        // 勤務中の最新の打刻レコードを取得
+        $latestTimeRecord = Time::where('punchIn', '<=', $closingTime)
+            ->where('punchOut', '=', null)
+            ->latest()
+            ->first();
+
+        // 勤務中の場合、強制的に退勤し、休憩中であれば休憩終了時刻を設定
+        if ($latestTimeRecord) {
+            // 退勤時刻を設定
+            $latestTimeRecord->update([
+                'punchOut' => $now,
             ]);
 
-            return;
+            // 休憩中の最新のレコードを取得
+            $latestRestRecord = Rest::where('time_id', $latestTimeRecord->id)
+                ->where('breakOut', '=', null)
+                ->latest()
+                ->first();
+
+            // 休憩中の場合、休憩終了時刻を設定
+            if ($latestRestRecord) {
+                $latestRestRecord->update([
+                    'breakOut' => $now,
+                ]);
+            }
+
+            // 翌日の勤務を開始
+            Time::create([
+                'user_id' => $latestTimeRecord->user_id,
+                'punchIn' => $now,
+                'date' => $now->copy()->addDay()->toDateString(),
+            ]);
         }
 
-        if (empty($timeOut->punchOut) && $timeOut->beakIn) {
-            $restOut = Rest::where('time_id', $timeOut->id)->latest()->first();
-
-            $timeOut->update([
-                'punchOut' => Carbon::now(),
-            ]);
-
-            $restOut->update([
-                'breakOut' => Carbon::now(),
-            ]);
-
-            $time = Time::create([
-                'user_id' => $user->id,
-                'punchIn' => Carbon::now(),
-            ]);
-        }
+        return 0;
     }
 }

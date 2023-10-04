@@ -16,35 +16,42 @@ class RestController extends Controller
     {
         $user = Auth::user();
         $time = Time::where('user_id', $user->id)->latest()->first();
-        $oldbreakin = Rest::where('time_id', $time->id)->latest()->first();
+        $lastBreakIn = Rest::where('time_id', $time->id)->latest()->first();
 
         if ($time->punchIn && !$time->punchOut) {
-            if ($oldbreakin && !$oldbreakin->breakOut) {
-                return redirect()->back()->with('message', '休憩中です')->content('');
+            if ($lastBreakIn && !$lastBreakIn->breakOut) {
+                return redirect()->back()->with('message', '休憩中です');
             }
-            $oldbreakin = Rest::create([
+
+            Rest::create([
                 'time_id' => $time->id,
                 'breakIn' => Carbon::now(),
             ]);
-            return redirect()->back()->with('message', 'ゆっくり休んでください')->content('');
-        };
 
-        if ($oldbreakin && !$oldbreakin->breakOut) {
-            return redirect()->back()->with('message', '休憩中です')->content('');
+            return redirect()->back()->with('message', 'ゆっくり休んでください');
         }
+
+        if ($lastBreakIn && !$lastBreakIn->breakOut) {
+            return redirect()->back()->with('message', '休憩中です');
+        }
+
+        return redirect()->back();
     }
 
     public function breakout()
     {
         $user = Auth::user();
         $time = Time::where('user_id', $user->id)->latest()->first();
-        $oldbreakin = Rest::where('time_id', $time->id)->latest()->first();
-        if ($oldbreakin && !$oldbreakin->breakOut) {
-            $oldbreakin->update([
+        $lastBreakIn = Rest::where('time_id', $time->id)->latest()->first();
+
+        if ($lastBreakIn && !$lastBreakIn->breakOut) {
+            $lastBreakIn->update([
                 'breakOut' => Carbon::now(),
             ]);
-            return redirect()->back()->with('message', '頑張ってください')->content('');;
+
+            return redirect()->back()->with('message', '頑張ってください');
         }
+
         return redirect()->back();
     }
 }

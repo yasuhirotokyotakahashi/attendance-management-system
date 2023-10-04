@@ -16,7 +16,7 @@
         <div class="header__inner">
             <div class="header-utilities">
                 <a class="header__logo" href="/">
-                    Attendance Management
+                    Atte
                 </a>
                 <nav>
                     <ul class="header-nav">
@@ -28,12 +28,6 @@
                                 <form class="form" action="/logout" method="post">
                                     @csrf
                                     <button class="header-nav__button">ログアウト</button>
-                                </form>
-                            </li>
-                            <li class="header-nav__item">
-                                <form class="form" action="/performance" method="get">
-                                    @csrf
-                                    <button class="header-nav__button">日付一覧へ</button>
                                 </form>
                             </li>
                         @endif

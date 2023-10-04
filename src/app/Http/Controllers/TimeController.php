@@ -21,34 +21,27 @@ class TimeController extends Controller
     public function timein()
     {
         $user = Auth::user();
+        $lastTimeIn = Time::where('user_id', $user->id)->latest()->first();
 
-        $oldtimein = Time::where('user_id', $user->id)->latest()->first(); //一番最初のレコードを取得
+        $today = Carbon::today();
+        $lastDay = $lastTimeIn ? Carbon::parse($lastTimeIn->punchIn)->startOfDay() : null;
 
-        $oldDay = '';
-        if ($oldtimein) {
-            $oldTimePunchIn = new Carbon($oldtimein->punchIn);
-            $oldDay = $oldTimePunchIn->startOfDay(); //最後に登録したpunchInの時刻を00:00:00で代入
-        }
-        $today = Carbon::today(); //当日の日時を00:00:00で代入
-
-        if (($oldDay == $today) && (empty($oldtimein->punchOut))) {
+        if ($lastDay == $today && empty($lastTimeIn->punchOut)) {
             return redirect()->back()->with('message', '出勤打刻済みです');
         }
 
-        //退勤後に再度出勤を押せない
-        if ($oldtimein) {
-            $oldTimePunchOut = new Carbon($oldtimein->punchOut);
-            $oldDay = $oldTimePunchOut->startOfDay(); //最後に登録したpunchInの時刻を00:00:00で代入
+        if ($lastTimeIn) {
+            $lastDay = Carbon::parse($lastTimeIn->punchOut)->startOfDay();
         }
 
-        if (($oldDay == $today)) {
+        if ($lastDay == $today) {
             return redirect()->back()->with('message', '退勤打刻済みです');
         }
 
         Time::create([
             'user_id' => $user->id,
             'punchIn' => Carbon::now(),
-            'date' => Carbon::today(),
+            'date' => $today,
         ]);
 
         return redirect()->back();
@@ -59,12 +52,6 @@ class TimeController extends Controller
         $user = Auth::user();
         $timeOut = Time::where('user_id', $user->id)->latest()->first();
 
-        $now = new Carbon();
-        $punchIn = new Carbon($timeOut->punchIn);
-        //実労働時間(Minute)
-        $stayTime = $punchIn->diffInMinutes($now);
-
-        //退勤処理がされていない場合のみ退勤処理を実行
         if ($timeOut) {
             if (empty($timeOut->punchOut)) {
                 $timeOut->update([
@@ -73,10 +60,10 @@ class TimeController extends Controller
 
                 return redirect()->back()->with('message', 'お疲れ様でした');
             } else {
-                $today = new Carbon();
+                $today = Carbon::today();
                 $date = $today->day;
-                $oldPunchOut = new Carbon();
-                $oldPunchOutDay = $oldPunchOut->day;
+                $oldPunchOutDay = Carbon::parse($timeOut->punchOut)->day;
+
                 if ($date == $oldPunchOutDay) {
                     return redirect()->back()->with('message', '退勤済みです');
                 } else {
@@ -91,40 +78,33 @@ class TimeController extends Controller
         $selectedDate = $request->input('date') ? Carbon::parse($request->input('date')) : Carbon::today();
 
         $items = Time::with('rests')->with('user')->whereDate('date', $selectedDate)->orderBy('date')->paginate(5);
-        $processedItems = []; //加工したデータを格納する配列
 
-        foreach ($items as $item) {
-            $workStart = Carbon::parse($item->punchIn); // 出勤時間
-            $workEnd = Carbon::parse($item->punchOut); // 退勤時間
-            $workDifference = $workEnd->diffInMinutes($workStart); // 出勤時間の差（分単位）
+        $processedItems = $items->map(function ($item) {
+            $workStart = Carbon::parse($item->punchIn);
+            $workEnd = Carbon::parse($item->punchOut);
 
-            $restDifferences = []; // 休憩時間の差の配列
+            $rests = Rest::where('time_id', $item->id)->get();
+            $totalRestDifference = $rests->sum(function ($rest) {
+                $restStart = Carbon::parse($rest->breakIn);
+                $restEnd = Carbon::parse($rest->breakOut);
+                return $restEnd->diffInMinutes($restStart);
+            });
 
-            $rests = Rest::where('time_id', $item->id)->get(); // Restモデルを利用して関連する休憩データを取得
-
-            foreach ($rests as $rest) {
-                $restStart = Carbon::parse($rest->breakIn); // 休憩開始時間
-                $restEnd = Carbon::parse($rest->breakOut); // 休憩終了時間
-                $restDifference = $restEnd->diffInMinutes($restStart); // 休憩時間の差（分単位）
-                $restDifferences[] = $restDifference; // 休憩時間の差を配列に追加
-            }
-
-            $totalRestDifference = array_sum($restDifferences); // 休憩時間の合計差（分単位）
-
+            $workDifference = $workEnd->diffInMinutes($workStart);
             $actualWorkingMinutes = $workDifference - $totalRestDifference;
 
-            $actualWorkingTime =
-                sprintf('%02d:%02d:%02d', intdiv($actualWorkingMinutes, 60), $actualWorkingMinutes % 60, 0);
-
-            $processedItems[] = [
+            return [
                 'item' => $item,
                 'workDifference' => $workDifference,
-                'totalRestDifference' =>
-                sprintf('%02d:%02d:%02d', intdiv($totalRestDifference, 60), $totalRestDifference % 60, 0),
-                'actualWorkingTime' => $actualWorkingTime,
-                'restDifferences' => $restDifferences,
+                'totalRestDifference' => sprintf('%02d:%02d:%02d', intdiv($totalRestDifference, 60), $totalRestDifference % 60, 0),
+                'actualWorkingTime' => sprintf('%02d:%02d:%02d', intdiv($actualWorkingMinutes, 60), $actualWorkingMinutes % 60, 0),
+                'restDifferences' => $rests->map(function ($rest) {
+                    $restStart = Carbon::parse($rest->breakIn);
+                    $restEnd = Carbon::parse($rest->breakOut);
+                    return $restEnd->diffInMinutes($restStart);
+                }),
             ];
-        }
+        });
 
         $previousDate = $selectedDate->copy()->subDay();
         $nextDate = $selectedDate->copy()->addDay();
