@@ -28,39 +28,13 @@
 ## テーブル設計
 以下は、主要なデータベーステーブルとそのフィールドの概要です。
 
-**usersテーブル**
-- id (主キー)
-- name
-- email
-- password
-- created_at
-- updated_at
 
-**employeesテーブル**
-- id (主キー)
-- user_id (外部キー、usersテーブルと関連)
-- first_name
-- last_name
-- email
-- phone
-- created_at
-- updated_at
+![勤怠管理 (1)](https://github.com/yasuhirotokyotakahashi/attendance-management-system/assets/128282431/2d45d6fe-16cc-4c46-831b-45da7907ab38)
 
-**attendancesテーブル**
-- id (主キー)
-- employee_id (外部キー、employeesテーブルと関連)
-- date
-- clock_in_time
-- clock_out_time
-- status
-- created_at
-- updated_at
-
-（必要に応じて他のテーブルを追加）
 
 ## ER図
 [ER図のイメージをここに挿入]
-
+![勤怠管理ER図 (1)](https://github.com/yasuhirotokyotakahashi/attendance-management-system/assets/128282431/7f9ec576-6609-47e4-8cc6-754e9e9f7370)
 ## 環境構築
 プロジェクトをローカルで実行するための手順を以下に示します。
 
