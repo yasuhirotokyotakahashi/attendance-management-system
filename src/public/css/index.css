@@ -1,8 +1,11 @@
-.attendance__alert--success {
+.attendance__alert {
     padding: 10px 30px;
     border-color: #badbcc;
-    background-color: #d1e7dd;
     color: #0f5132;
+}
+
+.attendance__alert--success {
+    background-color: #d1e7dd;
 }
 
 .attendance__alert--danger {
@@ -16,17 +19,12 @@
     margin: 0;
 }
 
-.attendance__panel {
+.attendance__panel,
+.attendance__button {
     margin: auto;
     width: 100%;
     display: flex;
-}
-
-.attendance__button {
-    width: 100%;
-    text-align: center;
-    display: inline-block;
-    margin: auto;
+    justify-content: center;
 }
 
 .attendance__button-submit {
@@ -38,6 +36,8 @@
     color: #000;
     cursor: pointer;
     margin: 30px auto;
+    font-size: 36px;
+    /* ボタン内のテキストのフォントサイズを調整 */
 }
 
 .attendance__content {
@@ -53,61 +53,25 @@
     text-align: center;
 }
 
-.attendance-table__inner {
-    width: 100%;
-}
-
-.attendance-table__row {
-    border-bottom: 1px solid #ddd;
-}
-
-.attendance-table__header {
-    padding: 12px;
-    width: 12%;
-    font-weight: bold;
-}
-
+.attendance-table__inner,
+.attendance-table__row,
+.attendance-table__header,
 .attendance-table__item {
-    padding: 12px;
     width: 12%;
+    padding: 12px;
 }
 
-.greeting {
+.greeting,
+.date-navigation {
     text-align: center;
 }
 
-
-
-.attendance__content .date-navigation {
-    display: flex;
-    align-items: center;
-    margin: 0 20px;
-}
-
+/* ナビゲーションリンク */
 .date-navigation .prev-date,
-.date-navigation .next-date {
-    font-size: 24px;
-    text-decoration: none;
-    color: #000;
-    margin: 0 10px;
-}
-
-.attendance__content .date-navigation .prev-date,
-.attendance__content .date-navigation .next-date {
-    font-size: 24px;
-    text-decoration: none;
-    color: #000;
-    margin: 0 10px;
-}
-
-.date-navigation {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 20px;
-}
-
+.date-navigation .next-date,
 .date-navigation .date {
-    margin: 0 20px;
     font-size: 24px;
+    text-decoration: none;
+    color: #000;
+    margin: 0 10px;
 }
