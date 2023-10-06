@@ -6,10 +6,10 @@
 このアプリケーションは、従業員の勤怠情報を明確にし、人事評価が効率的に行えることを目的としています。利用者数100人達成が目的です。主な機能として、次の項目が含まれています。
 
 ## アプリケーションURL
-[アプリケーションのURLをここに挿入]
+https://github.com/yasuhirotokyotakahashi/attendance-management-system.git
 
 ## 他のリポジトリ
-- [本プロジェクトのリポジトリ](リンク)
+- https://github.com/yasuhirotokyotakahashi/attendance-management-system.git
 
 ## 機能一覧
 - 新規ユーザー登録
