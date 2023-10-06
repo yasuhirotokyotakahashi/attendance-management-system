@@ -8,8 +8,6 @@
 ## アプリケーションURL
 https://github.com/yasuhirotokyotakahashi/attendance-management-system.git
 
-## 他のリポジトリ
-- https://github.com/yasuhirotokyotakahashi/attendance-management-system.git
 
 ## 機能一覧
 - 新規ユーザー登録
@@ -23,7 +21,6 @@ https://github.com/yasuhirotokyotakahashi/attendance-management-system.git
 - PHP：[PHPバージョン: 7.4.9]
 - データベース：MySQL [8.0.26 - MySQL Community Server - GPL]
 - サーバーのOSとバージョン：[Debian GNU/Linux/10 (buster)]
-- その他の技術：[使用したその他の重要な技術やライブラリ]
 
 ## テーブル設計
 以下は、主要なデータベーステーブルとそのフィールドの概要です。
@@ -33,7 +30,6 @@ https://github.com/yasuhirotokyotakahashi/attendance-management-system.git
 
 
 ## ER図
-[ER図のイメージをここに挿入]
 ![勤怠管理ER図 (1)](https://github.com/yasuhirotokyotakahashi/attendance-management-system/assets/128282431/7f9ec576-6609-47e4-8cc6-754e9e9f7370)
 ## 環境構築
 プロジェクトをローカルで実行するための手順を以下に示します。
